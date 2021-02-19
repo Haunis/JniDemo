@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/bt_get_c_str"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="14dp"
+        android:layout_marginTop="20dp"
+        android:text="Get C string"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/bt_jni_add"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="14dp"
+        android:text="Jni Add"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bt_get_c_str" />
+
+    <Button
+        android:id="@+id/bt_transmit_array"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="14dp"
+        android:text="Transmit Array"
+        android:textAllCaps="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bt_jni_add" />
+
+</android.support.constraint.ConstraintLayout>

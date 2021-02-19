@@ -1,0 +1,5 @@
+可以使用mm编译的so,无法使用gcc直接编译的so
+
+在源码下编译的so库可以给Android工程直接使用
+
+该demo是为JniDemo/JniNdkBuild模块编译的so库
