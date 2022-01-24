@@ -1,1 +1,2 @@
+include ':JniDynamicRegister'
 include ':JniLoadSoDemo', ':JniLogDemo', ':JniCCallJava', ':JniNdkBuild', ':JniEncode','JniBasic'
