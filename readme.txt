@@ -30,13 +30,41 @@
     直接install即可,会自动将so库拷贝值安装目录下
 
 二.使用源码环境编译的so:
-     1.在java同级目录创建文件夹:jniLibs/armeabi-v7a
-     2.在armeabi-v7a下放入libHelloJava.so
-     这样,install apk时,会自动将libHelloJava.so拷贝到/data/app/com.jiage.jnindkbuild/lib/arm里
-     或者在build.gradle指定so库所在路径,如项目根目录的JniNdkBuild/libs
+     方式一：
+         1.在java同级目录创建文件夹:jniLibs/armeabi-v7a
+         2.在armeabi-v7a下放入libHelloJava.so
+         这样,install apk时,会自动将libHelloJava.so拷贝到/data/app/com.jiage.jnindkbuild/lib/arm里
+     方式二：
+     在build.gradle指定so库所在路径,如项目根目录的JniNdkBuild/libs
 
      注意事项:
      本模块集成了cmake,为了取消cmake编译,需要将build.gradle中cmake相关内容注释,并将jni文件夹重新命名
 
 
 三.使用ndk-build编译的so库: 和使用源码环境编译的so库方式一样
+
+
+
+--------------------------------3.jni基础知识--------------------------------
+一.方法签名:
+javap -s xxx.class
+1.1 基本数据类型方法签名
+    JNI类型               Java类型          类型签名
+    jboolean              boolean           Z (B被btye使用)
+    jbyte                 byte              B
+    jchar                 char              C
+    jshort                short             S
+    jint                  int               I
+    jlong                 long              J (L表示类的签名)
+    jfloat                float             F
+    jdouble               double            D
+    void                  void              V
+
+1.2 引用数据类型方法签名
+    类的方法签名："L/包名/类名", 如 L/java/lang/String
+    数组的方法签名: "[数据类型签名"，如int[]：[I
+    多维数组方法签名： 多个[+类型签名
+
+完整的签名是 "(参数类型签名)+返回值类型签名"
+    比如 public native String getJavaInfo(String info,int index){}
+    对应的签名是：(Ljava/lang/String;I)Ljava/lang/String;

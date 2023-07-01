@@ -1,8 +1,8 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-add_library(Dynamic SHARED src/main/jni/dynamic.c)
-#add_library(Dynamic SHARED src/main/jni/dynamic.cpp)
+#add_library(Dynamic SHARED src/main/jni/dynamic.c)
+add_library(Dynamic SHARED src/main/jni/dynamic.cpp)
 
 # 从系统查找依赖库
 find_library(log-lib log)

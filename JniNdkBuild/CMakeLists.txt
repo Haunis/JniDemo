@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-# 配置so库信息
+# 编译生成so库
 add_library( # Sets the name of the library.
         # 生成的so库名称，此处生成的so文件名称是libnative-lib.so;位置：app/build/intermediates/cmake/debug/obj
         HelloJava
@@ -22,8 +22,7 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        # 资源文件，可以多个，
-        # 资源路径是相对路径，相对于本CMakeLists.txt所在目录
+        # 资源文件，可以多个，资源路径是相对路径，相对于本CMakeLists.txt所在目录
         src/main/jni_cmake/NativeJni.c)
 
 # Searches for a specified prebuilt library and stores the path as a
@@ -34,12 +33,12 @@ add_library( # Sets the name of the library.
 
 # 从系统查找依赖库
 find_library( # Sets the name of the path variable.
-        # android系统每个类型的库会存放一个特定的位置，而log库存放在log-lib中
+        # 变量名
         log-lib
 
         # Specifies the name of the NDK library that
         # you want CMake to locate.
-        # android系统在c环境下打log到logcat的库
+        # so库的名字，liblog.so; 在android /system/lib/liblog.so
         log )
 
 # Specifies libraries CMake should link to your target library. You
@@ -49,7 +48,7 @@ find_library( # Sets the name of the path variable.
 # 配置库的链接（依赖关系）
 target_link_libraries( # Specifies the target library.
 
-        # 目标库
+        # 目标库; libHelloJava.so依赖 ${log-lib}，也就是liblog.so
         HelloJava
 
         # Links the target library to the log library

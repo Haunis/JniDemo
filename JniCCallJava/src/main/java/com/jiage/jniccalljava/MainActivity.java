@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.bt_set_instance_null:
                 mUtils = null;
-                Log.d("TAG","已经将mUtils置为null: "+mUtils);
+                LogUtils.d("已经将mUtils置为null: " + mUtils);
                 break;
         }
     }

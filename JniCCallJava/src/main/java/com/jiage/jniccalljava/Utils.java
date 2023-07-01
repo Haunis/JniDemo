@@ -7,17 +7,21 @@ public class Utils {
         System.loadLibrary("call_java_util");
     }
 
+    public Utils() {
+        LogUtils.e("Utils 构造 ...");
+    }
+
     public native void callC();
 
-    public static void printString(String msg){
-        Log.d("JIA", msg);
+    public static void printString(String msg) {
+        LogUtils.d("msg = " + msg);
     }
 
     public void printD(String msg) {
-        Log.d("JIA", msg);
+        LogUtils.d("msg = " + msg);
     }
 
     public void printD(int i) {
-        Log.d("JIA", i + "");
+        LogUtils.d("i = " + i);
     }
 }

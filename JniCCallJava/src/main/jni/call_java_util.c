@@ -2,16 +2,16 @@
 #include <android/log.h>
 #include <unistd.h>
 
-#define LOG_TAG "JIA"
+#define LOG_TAG "jni_tag_c"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__);
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__);
 
 
 JNIEXPORT void JNICALL Java_com_jiage_jniccalljava_Utils_callC(JNIEnv *env, jobject thiz) {
 
-    LOGE("jni called ");
+    LOGE("jni called, sleeping... ");
 
-    usleep(9 * 1000 * 1000);
+    usleep(3 * 1000 * 1000);
 
     //1.获取字节码文件,第二个参数类似java里的包名，但c不识别包名。所以用“/”代替
     jclass jclazz = (*env)->FindClass(env, "com/jiage/jniccalljava/Utils");
@@ -30,13 +30,13 @@ JNIEXPORT void JNICALL Java_com_jiage_jniccalljava_Utils_callC(JNIEnv *env, jobj
      * 第二个参数是java中该方法的对象，就是thiz
      * 返回值是void所以是CallVoidMethod
      */
-    (*env)->CallVoidMethod(env, thiz, method_id_string, (*env)->NewStringUTF(env, "c call java"));
+    (*env)->CallVoidMethod(env, thiz, method_id_string, (*env)->NewStringUTF(env, "msg_from_jni"));
     (*env)->CallVoidMethod(env, thiz, method_id_int, 100);
 
     for (int i = 0; i < 2; i++) {
         (*env)->CallStaticVoidMethod(env, jclazz, method_id_string_static,
-                                     (*env)->NewStringUTF(env, "c call static java"));
-        usleep(1 * 1000 * 1000);
+                                     (*env)->NewStringUTF(env, "msg_from_jni static"));
+//        usleep(1 * 1000 * 1000);
 //        jclazz = 0;//置为空
     }
 

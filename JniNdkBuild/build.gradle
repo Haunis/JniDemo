@@ -30,7 +30,7 @@ android {
         }
 
 
-        //要使用cmake编译so,将该处externalNativeBuild和下方的打开即可
+////        配置cmake生成的so库类型
 //        externalNativeBuild {
 //            cmake {
 //                cppFlags ""
@@ -40,7 +40,7 @@ android {
 //        }
     }
 
-
+//    //配置CMakeLists.txt文件路径
 //    externalNativeBuild {
 //        cmake {
 //            path file('CMakeLists.txt')

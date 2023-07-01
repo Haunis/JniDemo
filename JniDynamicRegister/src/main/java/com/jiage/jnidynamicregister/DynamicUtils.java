@@ -4,6 +4,9 @@ public class DynamicUtils {
     static {
         System.loadLibrary("Dynamic");
     }
-    public static native String getString(String str);
+
+    public native void getString1();
+
+    public static native String getString2(String str);
 
 }
