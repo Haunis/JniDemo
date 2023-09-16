@@ -21,6 +21,7 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG,  __VA_ARGS__);
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG,  __VA_ARGS__);
 
+//哪个java类的native方法，需要调用c/c++
 const char *classPathName = "com/jiage/jnidynamicregister/DynamicUtils";
 
 extern "C"  //支持 C 语言
@@ -29,7 +30,7 @@ func1(JNIEnv *env, jobject instance) {
     LOGE("func1 called: %s", "11111")
 }
 
-jstring func2(JNIEnv *env, jobject instance, jstring s) {
+jstring func2(JNIEnv *env, jclass instance, jstring s) {
     const char *c_string = env->GetStringUTFChars(s, NULL);
 
     LOGE("func2 called: %s", c_string)
@@ -38,6 +39,7 @@ jstring func2(JNIEnv *env, jobject instance, jstring s) {
     return env->NewStringUTF("msg from jni");
 }
 
+//java类的哪些方法需要注册到jni，注册到jni后调用哪些jni方法
 static const JNINativeMethod mMethods[] = {
         {"getString1", "()V",                                    (void *) func1},
         {"getString2", "(Ljava/lang/String;)Ljava/lang/String;", (void *) func2}
@@ -48,7 +50,7 @@ static const JNINativeMethod mMethods[] = {
  */
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM *vm, void *pVoid) {
-    LOGE("OnLoad...")
+    LOGE("dynamic OnLoad...")
 
     //通过虚拟机 创建全新的env
     JNIEnv *jniEnv = nullptr;
@@ -58,7 +60,8 @@ JNI_OnLoad(JavaVM *vm, void *pVoid) {
     }
     jclass javaClass = jniEnv->FindClass(classPathName);
     jniEnv->RegisterNatives(javaClass, mMethods,
-                            sizeof(mMethods) / sizeof(JNINativeMethod));//动态注册的数量
+//                            sizeof(mMethods) / sizeof(mMethods[0]));//动态注册的数量;也行
+                            sizeof(mMethods) / sizeof(JNINativeMethod));//动态注册的数量;
 
     return JNI_VERSION_1_6;
 }
