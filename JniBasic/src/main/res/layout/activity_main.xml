@@ -1,43 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/bt_java2jni"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="java 传数据到 jni"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/bt_get_c_str"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="14dp"
-        android:layout_marginTop="20dp"
-        android:text="Get C string"
-        android:textAllCaps="false"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:onClick="onClick"
+        android:text="jni 返回 string"
+        android:textAllCaps="false" />
 
     <Button
         android:id="@+id/bt_jni_add"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="14dp"
-        android:text="Jni Add"
-        android:textAllCaps="false"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bt_get_c_str" />
+        android:onClick="onClick"
+        android:text="jni 返回 int"
+        android:textAllCaps="false" />
 
     <Button
-        android:id="@+id/bt_transmit_array"
+        android:id="@+id/bt_jni2java_intarr"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="14dp"
-        android:text="Transmit Array"
-        android:textAllCaps="false"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/bt_jni_add" />
+        android:onClick="onClick"
+        android:text="Jni 返回 数组"
+        android:textAllCaps="false" />
 
-</android.support.constraint.ConstraintLayout>
+
+    <Button
+        android:id="@+id/bt_get_java_obj"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="jni 返回 java对象"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/bt_test_exception"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="native test exception"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/bt_test_local_ref"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="测试局部引用"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/bt_test_global_ref"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="测试全局引用"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/bt_test_weak_global_ref"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="测试弱全局引用"
+        android:textAllCaps="false" />
+
+
+    <Button
+        android:id="@+id/bt_force_gc"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:onClick="onClick"
+        android:text="强制GC"
+        android:textAllCaps="false" />
+</LinearLayout>

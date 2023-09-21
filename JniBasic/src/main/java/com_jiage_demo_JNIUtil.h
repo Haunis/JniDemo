@@ -9,27 +9,75 @@ extern "C" {
 #endif
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    getStr
+ * Method:    java2jni
+ * Signature: (ZBCSJFDLjava/lang/String;I[I[Ljava/lang/String;Lcom/jiage/demo/Person;[Z)V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_java2jni
+  (JNIEnv *, jobject, jboolean, jbyte, jchar, jshort, jlong, jfloat, jdouble, jstring, jint, jintArray, jobjectArray, jobject, jbooleanArray);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    jni2java_str
  * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_jiage_demo_JNIUtil_getStr
+JNIEXPORT jstring JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1str
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    add
+ * Method:    jni2java_int
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_jiage_demo_JNIUtil_add
+JNIEXPORT jint JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1int
   (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    transmitArray
+ * Method:    jni2java_intarr
  * Signature: ([I)[I
  */
-JNIEXPORT jintArray JNICALL Java_com_jiage_demo_JNIUtil_transmitArray
+JNIEXPORT jintArray JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1intarr
   (JNIEnv *, jobject, jintArray);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    jni2java_obj
+ * Signature: ()Lcom/jiage/demo/Person;
+ */
+JNIEXPORT jobject JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1obj
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    native_test_exception
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1exception
+  (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    test_local_ref
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_test_1local_1ref
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    test_global_ref
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_test_1global_1ref
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    test_weak_global_ref
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_test_1weak_1global_1ref
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }
