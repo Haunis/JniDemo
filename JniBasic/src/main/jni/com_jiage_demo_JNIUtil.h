@@ -9,42 +9,42 @@ extern "C" {
 #endif
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    java2jni
+ * Method:    native_java2jni
  * Signature: (ZBCSJFDLjava/lang/String;I[I[Ljava/lang/String;Lcom/jiage/demo/Person;[Z)V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_java2jni
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1java2jni
   (JNIEnv *, jobject, jboolean, jbyte, jchar, jshort, jlong, jfloat, jdouble, jstring, jint, jintArray, jobjectArray, jobject, jbooleanArray);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    jni2java_str
+ * Method:    native_jni2java_str
  * Signature: (Ljava/lang/String;)Ljava/lang/String;
  */
-JNIEXPORT jstring JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1str
+JNIEXPORT jstring JNICALL Java_com_jiage_demo_JNIUtil_native_1jni2java_1str
   (JNIEnv *, jobject, jstring);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    jni2java_int
+ * Method:    native_jni2java_int
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1int
+JNIEXPORT jint JNICALL Java_com_jiage_demo_JNIUtil_native_1jni2java_1int
   (JNIEnv *, jobject, jint, jint);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    jni2java_intarr
+ * Method:    native_jni2java_intarr
  * Signature: ([I)[I
  */
-JNIEXPORT jintArray JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1intarr
+JNIEXPORT jintArray JNICALL Java_com_jiage_demo_JNIUtil_native_1jni2java_1intarr
   (JNIEnv *, jobject, jintArray);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    jni2java_obj
+ * Method:    native_jni2java_obj
  * Signature: ()Lcom/jiage/demo/Person;
  */
-JNIEXPORT jobject JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1obj
+JNIEXPORT jobject JNICALL Java_com_jiage_demo_JNIUtil_native_1jni2java_1obj
   (JNIEnv *, jobject);
 
 /*
@@ -57,26 +57,50 @@ JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1exception
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    test_local_ref
+ * Method:    native_test_local_ref
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_test_1local_1ref
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1local_1ref
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    test_global_ref
+ * Method:    native_test_global_ref
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_test_1global_1ref
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1global_1ref
   (JNIEnv *, jobject);
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    test_weak_global_ref
+ * Method:    native_test_weak_global_ref
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_test_1weak_1global_1ref
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1weak_1global_1ref
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    native_jni_sync_count
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1jni_1sync_1count
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    native_start_thread
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1start_1thread
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    native_detach_jni_thread
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1detach_1jni_1thread
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

@@ -7,7 +7,7 @@
 // --------------------------1. 接收string，返回string----------------------------
 extern "C"  //支持 C 语言
 JNIEXPORT jstring JNICALL //告诉虚拟机，这是jni函数
-Java_com_jiage_demo_JNIUtil_jni2java_1str(JNIEnv *env, jobject thiz, jstring js) {
+Java_com_jiage_demo_JNIUtil_native_1jni2java_1str(JNIEnv *env, jobject thiz, jstring js) {
 
     const char *c_string = NULL;
     c_string = env->GetStringUTFChars(js, NULL); //c++
@@ -22,14 +22,14 @@ Java_com_jiage_demo_JNIUtil_jni2java_1str(JNIEnv *env, jobject thiz, jstring js)
 }
 
 // --------------------------2. 接收int，返回int----------------------------
-extern "C" JNIEXPORT jint JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1int
+extern "C" JNIEXPORT jint JNICALL Java_com_jiage_demo_JNIUtil_native_1jni2java_1int
         (JNIEnv *env, jobject thiz, jint i, jint j) {
     LOGI("jni--> java data: i=%d, j=%d", i, j);
     return i + j;
 }
 
 // --------------------------3. 接收int数组，返回int数组----------------------------
-extern "C" JNIEXPORT jintArray JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1intarr
+extern "C" JNIEXPORT jintArray JNICALL Java_com_jiage_demo_JNIUtil_native_1jni2java_1intarr
         (JNIEnv *env, jobject thiz, jintArray array) {
     /*
      * 获取数组的首地址
@@ -78,7 +78,7 @@ extern "C" JNIEXPORT jintArray JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1int
 
 // --------------------------4. 接收void，返回java对象----------------------------
 //jni创建java对象，并返回给Java层
-extern "C" JNIEXPORT jobject JNICALL Java_com_jiage_demo_JNIUtil_jni2java_1obj
+extern "C" JNIEXPORT jobject JNICALL Java_com_jiage_demo_JNIUtil_native_1jni2java_1obj
         (JNIEnv *env, jobject instance) {
     //1. 拿到 Java 类的全路径
     const char *person_java = "com/jiage/demo/Person";

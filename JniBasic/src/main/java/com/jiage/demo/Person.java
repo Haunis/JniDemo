@@ -6,13 +6,13 @@ public class Person {
 
 
     public Person() {
-        LogUtils.i("java--> 空构造被执行...");
+        LogUtils.d("java--> 空构造被执行...");
     }
 
     public Person(String name, int age) {
         this.name = name;
         this.age = age;
-        LogUtils.i("java--> 构造被执行： name=" + name + ", age=" + age);
+        LogUtils.d("java--> 构造被执行： name=" + name + ", age=" + age);
     }
 
     public int getAge() {

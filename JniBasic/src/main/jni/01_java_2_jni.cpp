@@ -21,7 +21,7 @@
 //jni处理java传过来的数据
 extern "C"  //支持 C 语言
 JNIEXPORT void JNICALL //告诉虚拟机，这是jni函数，返回void
-Java_com_jiage_demo_JNIUtil_java2jni
+Java_com_jiage_demo_JNIUtil_native_1java2jni
         (JNIEnv *env, jobject instance,
          jboolean jboolean1,
          jbyte jbyte1,

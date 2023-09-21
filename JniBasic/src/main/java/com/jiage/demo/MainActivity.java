@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+    private JNIUtil util = new JNIUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,10 +16,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        JNIUtil util = new JNIUtil();
         switch (view.getId()) {
             case R.id.bt_java2jni://java传数据到jni
-                util.java2jni(true,
+                util.native_java2jni(true,
                         (byte) 1,
                         ',',
                         (short) 3,
@@ -34,42 +34,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 );
                 break;
             case R.id.bt_get_c_str: //java传string到jni， jni返回string
-                String strFromC = util.jni2java_str("msg_from_java");
+                String strFromC = util.native_jni2java_str("msg_from_java");
                 LogUtils.d("java--> strFromC:" + strFromC);
                 Toast.makeText(this, strFromC, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.bt_jni_add://java传int到jni， jni返回int
-                int retAdd = util.jni2java_int(3, 4);
+                int retAdd = util.native_jni2java_int(3, 4);
                 LogUtils.d("java--> retAdd=" + retAdd);
                 break;
             case R.id.bt_jni2java_intarr://传递数组到jni，jni返回新数组
                 int[] array = new int[]{1, 2, 3, 4, 5};
                 printArray(array);
-                int[] result = util.jni2java_intarr(array);
-                LogUtils.i("------------- java --------------- ");
+                int[] result = util.native_jni2java_intarr(array);
+                LogUtils.d("------------- java --------------- ");
                 printArray(result);
                 break;
             case R.id.bt_get_java_obj:
-                Person p = util.jni2java_obj();
-                LogUtils.i("java--> p = " + p);
+                Person p = util.native_jni2java_obj();
+                LogUtils.d("java--> p = " + p);
                 break;
             case R.id.bt_test_exception:
                 util.native_test_exception("测试异常");
                 break;
             case R.id.bt_test_local_ref: //jni 局部引用class对象
-                util.test_local_ref();//执行2次,jni会crash
+                util.native_test_local_ref();//执行2次,jni会crash
                 break;
             case R.id.bt_test_global_ref://jni全局引用class对象
-                util.test_global_ref();
+                util.native_test_global_ref();
                 break;
             case R.id.bt_test_weak_global_ref://jni弱全局引用
-                util.test_weak_global_ref();
+                util.native_test_weak_global_ref();
                 break;
-
-
-
-            case R.id.bt_force_gc:
-                System.gc();
+            case R.id.bt_jni_sync://测试jni方法中的同步
+                util.test_jni_sync();
+                break;
+            case R.id.bt_jni_pthread://jni开启子线程
+                util.native_start_thread();
                 break;
         }
     }
@@ -80,5 +80,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        util.native_rm_global_ref();
+        util = null;
+    }
 }

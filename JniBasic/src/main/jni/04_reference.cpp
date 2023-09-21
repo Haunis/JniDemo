@@ -27,7 +27,7 @@
 //测试局部引用
 jclass personClass; //虽然被提升到全局，但是该引用是无效的
 extern "C" JNIEXPORT void JNICALL
-Java_com_jiage_demo_JNIUtil_test_1local_1ref(JNIEnv *env, jobject) {
+Java_com_jiage_demo_JNIUtil_native_1test_1local_1ref(JNIEnv *env, jobject) {
     LOGD("测试局部引用, personClass");
     if (personClass == NULL) {
         const char *person_class = "com/jiage/demo/Person";
@@ -47,7 +47,7 @@ Java_com_jiage_demo_JNIUtil_test_1local_1ref(JNIEnv *env, jobject) {
 //测试全局引用
 jclass g_person_class;
 extern "C" JNIEXPORT void JNICALL
-Java_com_jiage_demo_JNIUtil_test_1global_1ref(JNIEnv *env, jobject) {
+Java_com_jiage_demo_JNIUtil_native_1test_1global_1ref(JNIEnv *env, jobject) {
     LOGD("测试全局引用");
 
     if (g_person_class == NULL) {
@@ -73,7 +73,7 @@ Java_com_jiage_demo_JNIUtil_test_1global_1ref(JNIEnv *env, jobject) {
 //测试弱全局引用
 jclass g_weak_person_class;
 extern "C" JNIEXPORT void JNICALL
-Java_com_jiage_demo_JNIUtil_test_1weak_1global_1ref(JNIEnv *env, jobject) {
+Java_com_jiage_demo_JNIUtil_native_1test_1weak_1global_1ref(JNIEnv *env, jobject) {
     LOGD("jni 测试弱全局引用....");
 
     if (g_weak_person_class == NULL) {
