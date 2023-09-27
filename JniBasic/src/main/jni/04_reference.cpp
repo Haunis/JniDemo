@@ -2,11 +2,13 @@
  * 参考：
  *      https://juejin.cn/post/6844904041235873799#heading-12
  *
- *  局部与全局引用
+ *  局部与全局引用(jni引用java对象)
  *      引用在 Java 程序设计中扮演非常重要的角色。
- *      虚拟机通过追踪类实例的引用并收回不在引用的垃圾来管理类实例的使用期限。
+ *      虚拟机通过追踪类实例的引用并收回不再引用的垃圾来管理类实例的使用期限。
  *      因为原生代码不是一个管理环境，因此 JNI 提供了一组函数允许原生代码显式地管理对象引用及使用期间原生代码。
  *      JNI 支持三种引用: 局部引用、全局引用和弱全局引用
+ *
+ *      这里的引用说的是jni对java对象的引用，不包括jni对jni对象的引用
  *
  *
  *  局部引用：
@@ -23,12 +25,38 @@
  */
 
 #include "common.h"
+#include <string>
+
+using namespace std; //string不是基本数据类型。要引入<string>头文件和std标准明明空间才可以使用
+
+class Student {
+
+public:
+    string name;
+    int age;
+
+public:
+    Student(string name, int age) {
+        this->name = name;
+        this->age = age;
+        LOGD("jni--> Student 构造 ...");
+    }
+
+};
+
 
 //测试局部引用
 jclass personClass; //虽然被提升到全局，但是该引用是无效的
+Student *student; // jni本身对象不受影响
 extern "C" JNIEXPORT void JNICALL
 Java_com_jiage_demo_JNIUtil_native_1test_1local_1ref(JNIEnv *env, jobject) {
     LOGD("测试局部引用, personClass");
+    LOGD("--------------------------------------");
+    if (student == NULL) {
+        student = new Student("张三", 18);
+    }
+    LOGD("student: %s %d", student->name.data(), student->age);
+    LOGD("--------------------------------------");
     if (personClass == NULL) {
         const char *person_class = "com/jiage/demo/Person";
         personClass = env->FindClass(person_class); //jni方法调用完就释放，提升至全局也没用。。
@@ -42,6 +70,7 @@ Java_com_jiage_demo_JNIUtil_native_1test_1local_1ref(JNIEnv *env, jobject) {
     jobject person_obj = env->NewObject(personClass, init);
 
 //    env->DeleteLocalRef(personClass);
+//    delete student;
 }
 
 //测试全局引用
