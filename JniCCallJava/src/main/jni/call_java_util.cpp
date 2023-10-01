@@ -18,9 +18,11 @@
  *
  * 1. 获取字节码
  *      1.1 通过类的名称(包名，但是要用"/"替换'".")来获取jclass。
+ *           注意该方法在跨线程中使用env无效！！！
  *           jclass FindClass(const char* clsName)
  *           比如：jclass clazz = env->FindClass("com/zyx/jnidemo/JNIUtils");
  *      1.2 通过对象实例来获取jclass，相当于Java中的getClass()函数
+ *           注意该obj不能是静态jni方法传来的！！！！
  *           jclass GetObjectClass(jobject obj)
  *      1.3通过jclass可以获取其父类的jclass对象
  *          jclass getSuperClass(jclass obj)

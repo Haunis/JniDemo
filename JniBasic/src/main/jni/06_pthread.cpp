@@ -19,6 +19,9 @@ jobject g_instance_java;
 
 //instance: MainActivity 对象
 void update_java_ui(JNIEnv *env, jobject instance) {
+    //Didn't find class "com.jiage.demo.JNIUtil" on path: DexPathList[[directory...
+    //该方法在跨线程中中无效!!!!
+//    jclass JNIUtilClass = env->FindClass("com/jiage/demo/JNIUtil");
     jclass JNIUtilClass = env->GetObjectClass(instance);
     // 拿到JNIUtil的updateUI 方法
     const char *sig = "()V";
@@ -28,7 +31,7 @@ void update_java_ui(JNIEnv *env, jobject instance) {
 }
 
 void *func(void *pVoid) {
-    LOGI("jni-> func ...");
+    LOGI("jni-> sub thread func ...");
 
     // 调用的话，一定需要JNIEnv *env
     // JNIEnv *env 无法跨越线程，只有JavaVM才能跨越线程
@@ -39,7 +42,7 @@ void *func(void *pVoid) {
         return 0;
     }
 
-//    update_java_ui(env, g_instance_jniutil); //error; 直接提全局的g_instance_ori不能跨线程传输
+//    update_java_ui(env, g_instance_java); //error; 直接提全局的g_instance_ori不能跨线程传输
     update_java_ui(env, g_instance_jni);
 
     // 解除附加到 JVM 的native线程
