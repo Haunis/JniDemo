@@ -6,7 +6,7 @@ public class Person {
 
 
     public Person() {
-        LogUtils.d("java--> 空构造被执行...");
+        LogUtils.d("java Person--> 空构造被执行...");
     }
 
     public Person(String name, int age) {

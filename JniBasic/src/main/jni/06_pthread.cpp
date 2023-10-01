@@ -14,7 +14,18 @@
 
 JavaVM *g_jvm;
 //jobject instance; //不同和局部引用同名
-jobject g_instance;
+jobject g_instance_jni;
+jobject g_instance_java;
+
+//instance: MainActivity 对象
+void update_java_ui(JNIEnv *env, jobject instance) {
+    jclass JNIUtilClass = env->GetObjectClass(instance);
+    // 拿到JNIUtil的updateUI 方法
+    const char *sig = "()V";
+    jmethodID updateUI = env->GetMethodID(JNIUtilClass, "updateUI", sig);
+
+    env->CallVoidMethod(instance, updateUI);
+}
 
 void *func(void *pVoid) {
     LOGI("jni-> func ...");
@@ -28,18 +39,8 @@ void *func(void *pVoid) {
         return 0;
     }
 
-    if (g_instance == nullptr) {
-        LOGE("jni--> g_instance is null");
-    } else {
-        LOGE("jni--> g_instance not null, addr=%p", g_instance);
-    }
-
-    jclass JNIUtilClass = env->GetObjectClass(g_instance);
-    // 拿到JNIUtil的updateUI 方法
-    const char *sig = "()V";
-    jmethodID updateUI = env->GetMethodID(JNIUtilClass, "updateUI", sig);
-
-    env->CallVoidMethod(g_instance, updateUI);
+//    update_java_ui(env, g_instance_jniutil); //error; 直接提全局的g_instance_ori不能跨线程传输
+    update_java_ui(env, g_instance_jni);
 
     // 解除附加到 JVM 的native线程
     g_jvm->DetachCurrentThread();
@@ -50,14 +51,17 @@ void *func(void *pVoid) {
 
 extern "C" JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1start_1thread
         (JNIEnv *env, jobject instance) {
-    LOGI("jni--> start thread");
-
+    LOGI("jni--> start thread, env=%#x, instance=%#x", env, instance);
+    if (g_instance_java != NULL) {
+        update_java_ui(env, g_instance_java);
+    }
     //获取jvm
     env->GetJavaVM(&g_jvm);
 
     // 提全局； 不会被释放，所以可以在线程里面用
     // g_instance不能和instance同名，否则提全局无效
-    g_instance = env->NewGlobalRef(instance);
+    g_instance_jni = env->NewGlobalRef(instance);
+    g_instance_java = instance; //不能跨线程传输，也不能被其他jni方法调用
 
     // 如果是非全局的，函数一结束，就被释放了
     pthread_t tid;
@@ -69,9 +73,16 @@ extern "C" JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1start_1thr
 
 extern "C" JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1rm_1global_1ref
         (JNIEnv *env, jobject instance) {
-    if (NULL != instance) {
-        env->DeleteGlobalRef(instance);
-        instance = NULL;
+    LOGI("native_rm_global_ref, env=%#x, instance=%#x", env, instance);
+
+    //MainActivity.onDestroy()里调用的话会error;
+    //但如果是非MainActivity.onDestroy()就ok
+//    if (g_instance_jniutil != NULL)update_java_ui(env, g_instance_jniutil);
+    if (g_instance_jni != NULL)update_java_ui(env, g_instance_jni);
+
+    if (NULL != g_instance_jni) {
+        env->DeleteGlobalRef(g_instance_jni);
+        g_instance_jni = NULL;
     }
 
 }

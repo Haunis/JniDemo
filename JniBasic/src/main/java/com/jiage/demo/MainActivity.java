@@ -56,20 +56,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.bt_test_exception:
                 util.native_test_exception("测试异常");
                 break;
-            case R.id.bt_test_local_ref: //jni 局部引用class对象
-                util.native_test_local_ref();//执行2次,jni会crash
+
+
+            case R.id.bt_set_local_ref: //jni 局部引用class对象
+                util.native_set_local_ref();//执行2次,jni会crash
                 break;
-            case R.id.bt_test_global_ref://jni全局引用class对象
-                util.native_test_global_ref();
+            case R.id.bt_set_global_ref://jni全局引用class对象
+                util.native_set_global_ref();
                 break;
-            case R.id.bt_test_weak_global_ref://jni弱全局引用
-                util.native_test_weak_global_ref();
+            case R.id.bt_set_weak_global_ref://jni弱全局引用
+                util.native_set_weak_global_ref();
                 break;
+            case R.id.bt_test_jni_ref:
+                util.native_test_jni_ref();
+                break;
+
+
             case R.id.bt_jni_sync://测试jni方法中的同步
                 util.test_jni_sync();
                 break;
             case R.id.bt_jni_pthread://jni开启子线程
                 util.native_start_thread();
+                break;
+            case R.id.bt_finish:
+//                util.native_rm_global_ref();
+                finish();
                 break;
         }
     }
@@ -83,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        LogUtils.e("onDestroy .....");
         util.native_rm_global_ref();
         util = null;
     }

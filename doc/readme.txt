@@ -103,6 +103,9 @@ JNIEnv :
     JNIEnv 只在创建它的线程生效，不能跨线程传递，不同线程的 JNIEnv 彼此独立。
     native 环境中创建的线程，如果需要访问 JNI，必须要调用 AttachCurrentThread 关联，并使用 DetachCurrentThread 解除链接。
 
+    JNIEnv 只允许在相同的线程上使用，如果需要使用JNIEnv，可以在 JNI_OnLoad 函数把 JavaVM 保存下来，
+           在使用的时候去创建 JNIEnv。这种情况同时是在 native 异步调用 Java 对象的时候使用。
+
 JavaVm :
     JavaVM 是虚拟机在 JNI 层的代表，一个进程只有一个 JavaVM，所有的线程共用一个JavaVM。
 
@@ -111,3 +114,45 @@ C:       (*env)->NewStringUTF(env, “Hellow World!”);
 C++:     env->NewStringUTF(“Hellow World!”);
 
 
+四、释放JNI对象
+    https://www.jianshu.com/p/5cde114159d4
+
+
+    1.基本原则：
+        GetStringUTFChars 和 ReleaseStringUTFChars，GetXXArrayElements 和 ReleaseXXArrayElements必须对应起来，否则会导致内存泄漏。
+
+        GetXXArrayElements 生成的数据不能在 ReleaseXXArrayElements 之后使用。
+
+        如果是在JNI函数内通过NewStringUTF、NewXXXArray或NewObject创建的java对象无论是否需要返回java层，都不需要手动释放，jvm会自动管理。
+        但是如果是通过AttachCurrentThread创建的JNIEnv去New的对象，必须通过 DeleteLocalRef 方式及时删除，因为在线程销毁之前，创建的对象无法自动回收。
+
+        通过 NewGlobalRef 创建的对象必须手动释放。
+
+        FindClass 和 GetMethodID 不需要释放。
+
+        如果不是通过NewGlobalRef函数创建的java对象不能跨线程调用，jclass也是jobject，如果是在JNI_OnLoad创建，那么必须通过 NewGlobalRef 函数处理后才能正常使用。
+
+    2.1释放string
+        const char *str = env->GetStringUTFChars(jstr, nullptr);
+        // TODO use str
+        env->ReleaseStringUTFChars(jstr, str);
+
+
+        //char* 转换成 std::string再使用
+        const char *c_str = env->GetStringUTFChars(jstr, nullptr);
+        std::string str(c_str, env->GetStringLength(jstr));
+        // TODO use str
+        env->ReleaseStringUTFChars(jstr, c_str);
+
+
+        //自己分配空间，自己进行 delete 释放。如果数据不大，推荐先转换成 std::string。
+        int size = env->GetStringLength(jstr);
+        char *c_arr = new char[size];
+        env->GetStringRegion(jstr, 0, size, (jchar *) c_arr);
+        // TODO use c_arr
+        delete[] c_arr;
+
+    2.2释放数组
+        auto int_arr = env->GetIntArrayElements(jint_arr, nullptr);
+        // TODO use int_arr
+        env->ReleaseIntArrayElements(jint_arr, int_arr, 0);

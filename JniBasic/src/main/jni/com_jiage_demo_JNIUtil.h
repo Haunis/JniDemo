@@ -60,7 +60,7 @@ JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1exception
  * Method:    native_test_local_ref
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1local_1ref
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1set_1local_1ref
   (JNIEnv *, jobject);
 
 /*
@@ -68,7 +68,7 @@ JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1local_1ref
  * Method:    native_test_global_ref
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1global_1ref
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1set_1global_1ref
   (JNIEnv *, jobject);
 
 /*
@@ -76,7 +76,15 @@ JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1global_1ref
  * Method:    native_test_weak_global_ref
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1weak_1global_1ref
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1set_1weak_1global_1ref
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_demo_JNIUtil
+ * Method:    native_test_jni_ref
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1jni_1ref
   (JNIEnv *, jobject);
 
 /*
@@ -97,10 +105,10 @@ JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1start_1thread
 
 /*
  * Class:     com_jiage_demo_JNIUtil
- * Method:    native_detach_jni_thread
+ * Method:    native_rm_global_ref
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1detach_1jni_1thread
+JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1rm_1global_1ref
   (JNIEnv *, jobject);
 
 #ifdef __cplusplus

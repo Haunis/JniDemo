@@ -50,13 +50,15 @@ public class JNIUtil {
 
     //////////////////////////// 4. jni局部引用和全局引用 ////////////////////////////////
     //jni测试局部引用
-    public native void native_test_local_ref();
+    public native void native_set_local_ref();
 
     //jni测试全局引用
-    public native void native_test_global_ref();
+    public native void native_set_global_ref();
 
     //jni测试全局引用
-    public native void native_test_weak_global_ref();
+    public native void native_set_weak_global_ref();
+
+    public native void native_test_jni_ref();
 
     //////////////////////////// 5.jni 同步： 锁java对象  ////////////////////////////////
     public native void native_jni_sync_count();
