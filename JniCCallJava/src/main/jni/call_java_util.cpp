@@ -9,7 +9,14 @@
 /**
  * 注意事项：
  *      https://blog.csdn.net/xingfeng2010/article/details/65214614
- *      static的native方法，不能直接使用instance调用非static的java方法！！！！
+ *      在static的native方法里，java传来的instance不是对象，而是类！！！因此不能使用该instance调用java非static方法
+ *
+ *  findClass()和GetObjectClass()的区别：
+ *      https://blog.csdn.net/liu_12345_liu/article/details/131154935
+ *      https://blog.csdn.net/yizhongliu/article/details/107516539
+ *      findClass: 在jni新线程如pthread_create中使用就会报错，因为没有堆栈帧，所以findClass()会到系统类加载器
+ *                 而不是到应用关联的类加载器寻找，因此会报"ClassNotFoundException"
+ *      GetObjectClass: 使用java对象的实例找到对应的class，提全局后可以跨线程使用。注意env不能跨线程！！！
  *
  * jni调用java代码步骤
  *      1. 找类： FindClass函数传入类名com/zyx/jnidemo/JNIUtils来找到类
@@ -18,11 +25,11 @@
  *
  * 1. 获取字节码
  *      1.1 通过类的名称(包名，但是要用"/"替换'".")来获取jclass。
- *           注意该方法在跨线程中使用env无效！！！
+ *           注意: 该方法在跨线程中使用env无效！！！
  *           jclass FindClass(const char* clsName)
  *           比如：jclass clazz = env->FindClass("com/zyx/jnidemo/JNIUtils");
  *      1.2 通过对象实例来获取jclass，相当于Java中的getClass()函数
- *           注意该obj不能是静态jni方法传来的！！！！
+ *           注意: 该obj不能是静态jni方法传来的！！！！
  *           jclass GetObjectClass(jobject obj)
  *      1.3通过jclass可以获取其父类的jclass对象
  *          jclass getSuperClass(jclass obj)
