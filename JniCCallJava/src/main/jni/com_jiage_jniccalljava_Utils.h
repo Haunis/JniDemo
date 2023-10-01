@@ -9,11 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     com_jiage_jniccalljava_Utils
- * Method:    callC
+ * Method:    native_func
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_com_jiage_jniccalljava_Utils_callC
+JNIEXPORT void JNICALL Java_com_jiage_jniccalljava_Utils_native_1func
   (JNIEnv *, jobject);
+
+/*
+ * Class:     com_jiage_jniccalljava_Utils
+ * Method:    native_static_func
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_jiage_jniccalljava_Utils_native_1static_1func
+  (JNIEnv *, jclass);
 
 #ifdef __cplusplus
 }

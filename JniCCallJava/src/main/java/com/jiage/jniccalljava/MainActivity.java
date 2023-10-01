@@ -2,9 +2,7 @@ package com.jiage.jniccalljava;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,13 +20,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.bt_call_c:
+            case R.id.bt_jni_func:
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        mUtils.callC();
+                        mUtils.native_func();
                     }
                 }).start();
+                break;
+            case R.id.bt_jni_static_func:
+                Utils.native_static_func();
                 break;
             case R.id.bt_set_instance_null:
                 mUtils = null;
