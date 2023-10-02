@@ -117,6 +117,8 @@ C++:     env->NewStringUTF(“Hellow World!”);
 四、释放JNI对象
     https://www.jianshu.com/p/5cde114159d4
 
+    ReleaseStringUTFChars原理： https://www.python100.com/html/U0AK62W62TQ1.html
+
 
     1.基本原则：
         GetStringUTFChars 和 ReleaseStringUTFChars，GetXXArrayElements 和 ReleaseXXArrayElements必须对应起来，否则会导致内存泄漏。
