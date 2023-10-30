@@ -47,6 +47,7 @@ namespace my_reference {
 
     //instance: MainActivity 对象
     void update_java_ui(JNIEnv *env, jobject instance) {
+        LOGI("jni--> update_java_ui ...");
         jclass JNIUtilClass = env->GetObjectClass(instance);
         // 拿到JNIUtil的updateUI 方法
         const char *sig = "()V";
@@ -56,74 +57,80 @@ namespace my_reference {
     }
 }
 
-class Student {
+class JniStudent {
 
 public:
     string name;
     int age;
 
 public:
-    Student(string name, int age) {
+    JniStudent(string name, int age) {
         this->name = name;
         this->age = age;
-        LOGI("jni--> Student 构造 ...");
+        LOGI("jni--> JniStudent 构造 ...");
     }
 
     void study() {
-        LOGI("jni--> Student study ...");
+        LOGI("jni--> JniStudent study ...");
     }
 };
 
 
-//测试局部引用
+//  ---------------------- 1. 设置person_class为局部引用  -----------------------------------
 jclass g_person_class_local; //虽然被提升到全局，但是该引用是无效的
-Student *g_student; // jni本身对象不受影响
+JniStudent *g_JniStudent; // jni本身对象不受影响
 extern "C" JNIEXPORT void JNICALL
 Java_com_jiage_demo_JNIUtil_native_1set_1local_1ref(JNIEnv *env, jobject instance) {
     LOGE("jni--> 设置局部引用 .....");
     my_reference::g_ref_flag = REF_FLAG_LOCAL;
 
-    LOGI("-----------------设置jni 引用---------------------");
-    if (g_student == NULL)g_student = new Student("张三", 18);//jni指针，提全局有效！！！
+    LOGI("-----------------设置jni层的指针---------------------");
+    if (g_JniStudent == NULL)g_JniStudent = new JniStudent("张三", 18);//jni指针，提全局有效！！！
 
-    LOGI("-----------------设置instance 引用---------------------");
+    LOGI("-----------------设置instance local 引用---------------------");
     if (my_reference::g_instance_jniutil == NULL) {
-        my_reference::g_instance_jniutil = instance; //不能跨线程传递
-//        g_instance_jniutil = env->NewGlobalRef(instance);//这样子才可以跨线程传递
+        my_reference::g_instance_jniutil = instance; //不能跨线程传递; 虽然暂时g_instance_jniutil可能有效，多执行几次本方法就无效了。
+//        my_reference::g_instance_jniutil = env->NewGlobalRef(instance);//这样子才可以跨线程传递，且有效的
     }
-    my_reference::update_java_ui(env, my_reference::g_instance_jniutil);
+
+    my_reference::update_java_ui(env, my_reference::g_instance_jniutil);//多执行几次本方法，会crash
+//    my_reference::update_java_ui(env, instance);//ok; 这个instance是肯定有效的
 
     LOGI("-----------------设置person local 引用---------------------");
     if (g_person_class_local == NULL) {
         const char *person_class = "com/jiage/demo/Person";
-        g_person_class_local = env->FindClass(person_class); //jni方法调用完就释放，提升至全局也没用。。jni方法使用该引用无效
+        //jni方法调用完，局部引用就释放。
+        //其他jni方法使用该引用无效，即使将该引用提升至全局也没用。。
+        g_person_class_local = env->FindClass(person_class);
         LOGI("g_person_class_local == null 执行了。");
     }
 }
 
-//测试全局引用
-jclass g_person_class_gobal;
+//  ---------------------- 2. 设置person_class为全局引用  -------------------------------------
+jclass g_person_class_global;
 extern "C" JNIEXPORT void JNICALL
 Java_com_jiage_demo_JNIUtil_native_1set_1global_1ref(JNIEnv *env, jobject instance) {
     LOGE("jni--> 设置全局引用...");
     my_reference::g_ref_flag = REF_FLAG_GLOBAL;
 
-    ////////////////////////////////////////////////////////////////////////////
-    if (my_reference::g_instance_jniutil != NULL) {
-        my_reference::update_java_ui(env, my_reference::g_instance_jniutil);
+    LOGI("-----------------设置instance 全局引用---------------------");
+    if (my_reference::g_instance_jniutil == NULL) {
+        my_reference::g_instance_jniutil = env->NewGlobalRef(instance);//这样的全局引用才可以跨线程传递，且有效的
     }
-    ////////////////////////////////////////////////////////////////////////////
+    my_reference::update_java_ui(env, my_reference::g_instance_jniutil);
 
-    if (g_person_class_gobal == NULL) {
+    LOGI("-----------------设置person 全局 引用---------------------");
+
+    if (g_person_class_global == NULL) {
         //1. 提升全局解决不能重复使用问题
         const char *person_class = "com/jiage/demo/Person";
         jclass jclass1 = env->FindClass(person_class);//jclass1提全局没有用...
-        g_person_class_gobal = static_cast<jclass>(env->NewGlobalRef(jclass1));
-        LOGI("g_person_class_gobal == null 执行了。");
+        g_person_class_global = static_cast<jclass>(env->NewGlobalRef(jclass1));
+        LOGI("g_person_class_global == null 执行了。");
     }
 }
 
-//测试弱全局引用
+//  ---------------------- 3. 设置person_class为弱全局引用  -------------------------------------
 jclass g_person_class_weak;
 extern "C" JNIEXPORT void JNICALL
 Java_com_jiage_demo_JNIUtil_native_1set_1weak_1global_1ref(JNIEnv *env, jobject) {
@@ -140,6 +147,7 @@ Java_com_jiage_demo_JNIUtil_native_1set_1weak_1global_1ref(JNIEnv *env, jobject)
     }
 }
 
+//  ---------------------- 测试person_class为局部、全局、弱全局引用的有效性 -------------------------------------
 extern "C"
 JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1jni_1ref
         (JNIEnv *env, jobject instance) {
@@ -150,12 +158,16 @@ JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1jni_1ref
             LOGE("未设置引用 ！！！！！");
             return;
         case REF_FLAG_LOCAL:
-            person_class = g_person_class_local;
-            g_student->study();//ok
-            my_reference::update_java_ui(env, my_reference::g_instance_jniutil);//ok
+            person_class = g_person_class_local;//person_class为local引用
+
+
+            g_JniStudent->study();//ok； jni指针肯定有效
+
+            //暂时有效，但多执行几次就会无效
+            my_reference::update_java_ui(env, my_reference::g_instance_jniutil);
             break;
         case REF_FLAG_GLOBAL:
-            person_class = g_person_class_gobal;
+            person_class = g_person_class_global;
             break;
         case REF_FLAG_WEAK:
             person_class = g_person_class_weak;
@@ -165,16 +177,16 @@ JNIEXPORT void JNICALL Java_com_jiage_demo_JNIUtil_native_1test_1jni_1ref
     //Java Person 构造方法实例化
     const char *sig = "()V";
     const char *method = "<init>";//Java 构造方法标识
-    jmethodID init = env->GetMethodID(person_class, method, sig);
-    //创建java对象; jni函数里的NewObject无需手动释放，jvm自动管理
+    jmethodID init = env->GetMethodID(person_class, method, sig); //局部引用会crash
+    //使用person_class创建java对象; jni函数里的NewObject无需手动释放，jvm自动管理
     jobject person_obj = env->NewObject(person_class, init);
 
 
 //    env->DeleteLocalRef(g_person_class_local);
-//    delete g_student;
+//    delete g_JniStudent;
 //
-//    env->DeleteGlobalRef(g_person_class_gobal); //显式释放主动删除局部引用
-//    g_person_class_gobal = NULL;
+//    env->DeleteGlobalRef(g_person_class_global); //显式释放主动删除局部引用
+//    g_person_class_global = NULL;
 //
 //    env->DeleteWeakGlobalRef(g_person_class_weak);
 //    g_person_class_weak = NULL;

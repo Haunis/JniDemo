@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             case R.id.bt_set_local_ref: //jni 局部引用class对象
-                util.native_set_local_ref();//执行2次,jni会crash
+                util.native_set_local_ref();//多执行几次，局部引用instance会失效，导致crash
                 break;
             case R.id.bt_set_global_ref://jni全局引用class对象
                 util.native_set_global_ref();
