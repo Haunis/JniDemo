@@ -68,7 +68,7 @@ javap -s xxx.class
     void                  void              V
 
 1.2 引用数据类型方法签名
-    类的方法签名：L + /包名/类名+ ;, 如String是: L/java/lang/String;
+    类的方法签名：L + 包名/类名+ ;, 如String是: Ljava/lang/String;
     数组的方法签名: "[数据类型签名"，如int[]是: [I
     多维数组方法签名： 多个[+类型签名
 

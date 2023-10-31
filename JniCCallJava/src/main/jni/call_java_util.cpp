@@ -1,17 +1,11 @@
-#include "com_jiage_jniccalljava_Utils.h"
-#include <android/log.h>
-#include <unistd.h>
-
-#define LOG_TAG "jni_tag_cpp"
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__);
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__);
-
 /**
+ * jni调用java层方法、获取java层对象的成员变量
+ *
  * 注意事项：
  *      https://blog.csdn.net/xingfeng2010/article/details/65214614
  *      在static的native方法里，java传来的instance不是对象，而是类！！！因此不能使用该instance调用java非static方法
  *
- *  findClass()和GetObjectClass()的区别：
+ *  env->findClass("com.xxx.xxx")和env->GetObjectClass(instance)的区别：
  *      https://blog.csdn.net/liu_12345_liu/article/details/131154935
  *      https://blog.csdn.net/yizhongliu/article/details/107516539
  *      findClass: 在jni新线程如pthread_create中使用就会报错，因为没有堆栈帧，所以findClass()会到系统类加载器
@@ -57,11 +51,19 @@
  *
  *
  */
+#include "com_jiage_jniccalljava_Utils.h"
+#include <android/log.h>
+#include <unistd.h>
+
+#define LOG_TAG "jni_tag_cpp"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__);
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__);
+
 
 //调用java静态方法
-void call_java_static_method(JNIEnv *env, jobject instance) {
+void call_java_static_method(JNIEnv *env, jobject cls) {
     //1.获取字节码文件,第二个参数类似java里的包名，但c不识别包名。所以用“/”代替
-//    jclass clazz = env->GetObjectClass(instance); //如果是静态jni此处会报错
+//    jclass clazz = env->GetObjectClass(cls); //如果是静态jni方法调用到此处会报错，因为cls是class！！！
     jclass clazz = env->FindClass("com/jiage/jniccalljava/Utils");
 
     //2.获取方法签名
@@ -100,6 +102,19 @@ void call_java_method(JNIEnv *env, jobject instance) {
     printD(200);//就是宏展开
 }
 
+//获取java对象成员变量
+void get_java_field(JNIEnv *env, jobject instance) {
+    jclass clazz = env->GetObjectClass(instance);
+    jfieldID jid = env->GetFieldID(clazz, "count", "I");
+    int val = env->GetIntField(instance, jid);
+    LOGI("val = %d", val);
+
+    jid = env->GetFieldID(clazz, "name", "Ljava/lang/String;");
+    jstring js_name = (jstring) env->GetObjectField(instance, jid);
+    const char *name = env->GetStringUTFChars(js_name, NULL);
+    LOGI("name = %s", name);
+}
+
 extern "C" //支持C语言编码风格
 JNIEXPORT void JNICALL
 Java_com_jiage_jniccalljava_Utils_native_1func(JNIEnv *env, jobject instance) {
@@ -107,13 +122,14 @@ Java_com_jiage_jniccalljava_Utils_native_1func(JNIEnv *env, jobject instance) {
     LOGE("jni--> native_func ...%p", instance);
     call_java_static_method(env, instance);
     call_java_method(env, instance);
+    get_java_field(env, instance);
 }
 
 extern "C"
 JNIEXPORT void JNICALL Java_com_jiage_jniccalljava_Utils_native_1static_1func
-        (JNIEnv *env, jclass instance) {
-    LOGE("jni--> native_static_func ...%p", instance);//和native_func的instance地址都不一样!!!!
-    call_java_static_method(env, instance);
+        (JNIEnv *env, jclass cls) {
+    LOGE("jni--> native_static_func ...%p", cls);//和native_func的instance地址都不一样!!!!
+    call_java_static_method(env, cls);
 
 //    call_java_method(env, instance); //error; 这里的instance不是对象，而是类...不能用该instance调用java非static方法
 
